@@ -59,7 +59,7 @@ fun DashboardScreen(
         
         DashboardItem("بصمة المدرسة", Icons.Filled.Analytics, Color(0xFFBA68C8), "school_fingerprint"),
         DashboardItem("محفظة الطالب", Icons.Filled.FolderShared, Color(0xFFF06292), "student_portfolio"),
-        DashboardItem("تذكير الخطط", Icons.Filled.Alarm, Color(0xFFFF8A65), "plan_reminder")
+        DashboardItem("الجدول الزمني", Icons.Filled.DateRange, Color(0xFFFF8A65), "schedule")
     )
 
     var selectedTab by remember { mutableIntStateOf(0) }

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.WifiTethering
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,63 +25,73 @@ import androidx.compose.ui.text.font.FontWeight
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExamsScreen(viewModel: YarmoukViewModel, onNavigateBack: () -> Unit) {
-    var isSmartRulerEnabled by remember { mutableStateOf(false) }
-
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text("محرر الامتحانات ومحرك الرسم") }, navigationIcon = {
+                TopAppBar(title = { Text("هيكلية ورقة الاختبار (The Exam Engine)") }, navigationIcon = {
                     IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "رجوع") }
                 })
             }
         ) { padding ->
             Column(modifier = Modifier.padding(padding).padding(16.dp).fillMaxSize()) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Switch(checked = isSmartRulerEnabled, onCheckedChange = { isSmartRulerEnabled = it })
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("المسطرة الذكية (Smart Ruler): ${if (isSmartRulerEnabled) "تعمل" else "متوقفة"}", fontWeight = FontWeight.Bold)
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("معالج الرموز الديناميكي (Math & Physics) - جاري التحميل...", color = Color.Gray, style = MaterialTheme.typography.bodySmall)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+                // Exam Paper Container
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
                         .background(Color.White)
-                        .border(1.dp, Color.LightGray)
+                        .border(2.dp, Color.Black) // Outer Border
+                        .padding(2.dp)
+                        .border(1.dp, Color.Black) // Inner Border
+                        .padding(16.dp)
                 ) {
-                    androidx.compose.foundation.Canvas(modifier = Modifier.fillMaxSize()) {
-                        // Background watermark (Non-editable)
-                        val paint = android.graphics.Paint().apply {
-                            color = android.graphics.Color.argb(40, 200, 200, 200)
-                            textSize = 40f
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        // Header
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                                Text("الجمهورية اليمنية", fontWeight = FontWeight.Bold, color = Color.Black)
+                                Text("وزارة التربية والتعليم", fontWeight = FontWeight.Bold, color = Color.Black)
+                                Text("مكتب التربية والتعليم", color = Color.Black)
+                                Text("المدرسة: .................", color = Color.Black)
+                            }
+                            
+                            Box(modifier = Modifier.weight(1f).height(80.dp), contentAlignment = Alignment.Center) {
+                                // Placeholder for Yemen Emblem
+                                Icon(Icons.Filled.Star, contentDescription = "شعار الجمهورية", tint = Color.Gray, modifier = Modifier.size(48.dp))
+                            }
+                            
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                                Text("اسم الطالب: .................", color = Color.Black)
+                                Text("المادة: .................", color = Color.Black)
+                                Text("رقم الجلوس: .................", color = Color.Black)
+                            }
                         }
                         
-                        drawContext.canvas.nativeCanvas.apply {
-                            save()
-                            rotate(-30f, size.width/2, size.height/2)
-                            drawText("بواسطة محرر اليرموك الشامل @برمجة وتطوير المهندس سهيل الهزبري", 50f, size.height/2, paint)
-                            restore()
+                        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(vertical = 16.dp))
+                        Text("الأسئلة:", fontWeight = FontWeight.Bold, color = Color.Black)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
+                        // 3-Column Table
+                        Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray).border(1.dp, Color.Black)) {
+                            Text("رقم السؤال", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Text("السؤال", modifier = Modifier.weight(3f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Text("الدرجة", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
                         }
                         
-                        // Fake drawn shapes if smart ruler is enabled
-                        if (isSmartRulerEnabled) {
-                            drawLine(
-                                color = Color.Black,
-                                start = androidx.compose.ui.geometry.Offset(100f, 100f),
-                                end = androidx.compose.ui.geometry.Offset(500f, 100f),
-                                strokeWidth = 5f
-                            )
-                            drawContext.canvas.nativeCanvas.drawText("Vectorized Line (Smart Ruler)", 120f, 90f, android.graphics.Paint().apply { textSize = 20f; color = android.graphics.Color.BLUE })
+                        // Table Rows
+                        val questions = listOf("عرّف ما يلي: ........................", "علل: ........................", "اشرح باختصار: ........................")
+                        questions.forEachIndexed { index, q ->
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Text("السؤال ${index + 1}", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(16.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                Text(q, modifier = Modifier.weight(3f).border(1.dp, Color.Black).padding(16.dp), color = Color.Black)
+                                Text("", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(16.dp), color = Color.Black) // Empty for score
+                            }
                         }
                     }
                 }
                 
-                Button(onClick = { /* Save canvas */ }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
-                    Text("حفظ النموذج وتطبيق العلامة المائية السيادية")
+                Button(onClick = { /* Export */ }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                    Text("طباعة النموذج وتطبيق العلامة المائية")
                 }
             }
         }
@@ -90,72 +101,95 @@ fun ExamsScreen(viewModel: YarmoukViewModel, onNavigateBack: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BubbleSheetScreen(viewModel: YarmoukViewModel, onNavigateBack: () -> Unit) {
-    var numQuestions by remember { mutableStateOf("10") }
-    var numOptions by remember { mutableStateOf("4") }
+    var numQuestions by remember { mutableStateOf("40") }
     
-    val qCount = numQuestions.toIntOrNull() ?: 10
-    val oCount = numOptions.toIntOrNull() ?: 4
+    val qCount = numQuestions.toIntOrNull() ?: 40
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
             topBar = {
-                TopAppBar(title = { Text("محرر الأتمتة (البابل شيت)") }, navigationIcon = {
+                TopAppBar(title = { Text("هيكلية ورقة الأتمتة (Matrix Cells)") }, navigationIcon = {
                     IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "رجوع") }
                 })
             }
         ) { padding ->
             Column(modifier = Modifier.padding(padding).padding(16.dp).fillMaxSize()) {
-                Text("محرك تصميم أوراق الأتمتة الديناميكي", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                Text("محرك تصميم أوراق الأتمتة (نظام الخلايا لتطابق الأقطار)", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedTextField(
-                        value = numQuestions, 
-                        onValueChange = { numQuestions = it }, 
-                        label = { Text("عدد الأسئلة") },
-                        modifier = Modifier.weight(1f)
-                    )
-                    OutlinedTextField(
-                        value = numOptions, 
-                        onValueChange = { numOptions = it }, 
-                        label = { Text("عدد الخيارات (A,B,C,D)") },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
+                OutlinedTextField(
+                    value = numQuestions, 
+                    onValueChange = { numQuestions = it }, 
+                    label = { Text("عدد الأسئلة") },
+                    modifier = Modifier.fillMaxWidth()
+                )
                 
                 Spacer(modifier = Modifier.height(24.dp))
                 
                 Card(modifier = Modifier.fillMaxWidth().weight(1f).padding(8.dp), colors = CardDefaults.cardColors(containerColor = Color.White)) {
-                    LazyColumn(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-                        items((1..qCount).toList()) { questionNumber ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-                            ) {
-                                Text("$questionNumber.", modifier = Modifier.width(40.dp), fontWeight = FontWeight.Bold, color = Color.Black)
-                                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                                    val letters = listOf("A", "B", "C", "D", "E", "F")
-                                    for (i in 0 until java.lang.Math.min(oCount, letters.size)) {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(36.dp)
-                                                .background(Color.Transparent, shape = androidx.compose.foundation.shape.CircleShape)
-                                                .border(2.dp, Color.Black, shape = androidx.compose.foundation.shape.CircleShape),
-                                            contentAlignment = androidx.compose.ui.Alignment.Center
-                                        ) {
-                                            Text(letters[i], color = Color.Gray)
+                    Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+                            // Two Blocks of Questions (1-20, 21-40)
+                            val perColumn = java.lang.Math.ceil((qCount / 2.0)).toInt()
+                            
+                            // Block 1
+                            Column(modifier = Modifier.weight(1f).border(1.dp, Color.Black)) {
+                                Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray).padding(4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("د", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("ج", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("ب", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("أ", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("الفقرة", modifier = Modifier.weight(1.5f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                }
+                                Divider(color = Color.Black)
+                                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                                    items((1..perColumn).toList()) { index ->
+                                        Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            for(i in 0..3) {
+                                                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                                                    Box(modifier = Modifier.size(24.dp).border(1.dp, Color.Black, androidx.compose.foundation.shape.CircleShape))
+                                                }
+                                            }
+                                            Text(index.toString(), modifier = Modifier.weight(1.5f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
                                         }
+                                        Divider(color = Color.LightGray)
                                     }
                                 }
                             }
-                            HorizontalDivider(color = Color.LightGray.copy(alpha = 0.3f), thickness = 1.dp)
+                            
+                            Spacer(Modifier.width(16.dp))
+                            
+                            // Block 2
+                            Column(modifier = Modifier.weight(1f).border(1.dp, Color.Black)) {
+                                Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray).padding(4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("د", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("ج", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("ب", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("أ", modifier = Modifier.weight(1f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("الفقرة", modifier = Modifier.weight(1.5f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                }
+                                Divider(color = Color.Black)
+                                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                                    val startIdx = perColumn + 1
+                                    items((startIdx..java.lang.Math.min(qCount, perColumn * 2)).toList()) { index ->
+                                        Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+                                            for(i in 0..3) {
+                                                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                                                    Box(modifier = Modifier.size(24.dp).border(1.dp, Color.Black, androidx.compose.foundation.shape.CircleShape))
+                                                }
+                                            }
+                                            Text(index.toString(), modifier = Modifier.weight(1.5f), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                        }
+                                        Divider(color = Color.LightGray)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
                 
                 Button(onClick = { /* Export to PDF */ }, modifier = Modifier.fillMaxWidth().padding(top = 8.dp)) {
-                    Text("تصدير ورقة الأتمتة PDF")
+                    Text("تصدير ورقة الأتمتة (Scanner Ready)")
                 }
             }
         }
@@ -390,11 +424,86 @@ fun StudentPortfolioScreen(viewModel: YarmoukViewModel, onNavigateBack: () -> Un
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlanReminderScreen(onNavigateBack: () -> Unit) {
+fun ScheduleScreen(onNavigateBack: () -> Unit) {
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
-        Scaffold(topBar = { TopAppBar(title = { Text("تذكير الخطط (إشعارات صوتية)") }, navigationIcon = { IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "رجوع") } }) }) { p ->
-            Column(Modifier.padding(p).padding(16.dp)) {
-                Text("إعدادت المساعد الصوتي لتنبيه المعلم بجدول أعماله اليومي.", fontWeight = FontWeight.Bold)
+        Scaffold(
+            topBar = {
+                TopAppBar(title = { Text("هيكلية الجدول الزمني (The Official Schedule)") }, navigationIcon = {
+                    IconButton(onClick = onNavigateBack) { Icon(Icons.AutoMirrored.Filled.ArrowForward, "رجوع") }
+                })
+            }
+        ) { padding ->
+            Column(modifier = Modifier.padding(padding).padding(16.dp).fillMaxSize()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(Color.White)
+                        .border(2.dp, Color.Black)
+                        .padding(16.dp)
+                ) {
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        // Header
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                                Text("الجمهورية اليمنية", fontWeight = FontWeight.Bold, color = Color.Black)
+                                Text("وزارة التربية والتعليم", fontWeight = FontWeight.Bold, color = Color.Black)
+                                Text("اللجنة العليا للاختبارات", fontWeight = FontWeight.Bold, color = Color.Black)
+                            }
+                            
+                            Box(modifier = Modifier.weight(1f).height(80.dp), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.Star, contentDescription = "شعار الجمهورية", tint = Color.Gray, modifier = Modifier.size(64.dp))
+                            }
+                            
+                            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
+                                Text("بسم الله الرحمن الرحيم", fontWeight = FontWeight.Bold, color = Color.Black)
+                            }
+                        }
+                        
+                        Divider(color = Color.Black, thickness = 2.dp, modifier = Modifier.padding(vertical = 8.dp))
+                        
+                        Text("جدول سير تنفيذ الاختبارات النهائية", modifier = Modifier.fillMaxWidth(), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text("لشهادة الثانوية العامة (القسم العلمي) للعام الدراسي 2025/2026م", modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                        
+                        // 5-Column Table Header
+                        Row(modifier = Modifier.fillMaxWidth().background(Color.LightGray).border(1.dp, Color.Black)) {
+                            Text("مدة الإجابة", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Column(modifier = Modifier.weight(1f).border(1.dp, Color.Black)) {
+                                Text("زمن الإجابة", modifier = Modifier.fillMaxWidth().padding(4.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                                Divider(color = Color.Black)
+                                Row {
+                                    Text("إلى", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(4.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                    Text("من", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(4.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                }
+                            }
+                            Text("المادة الدراسية", modifier = Modifier.weight(1.5f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Text("التاريخ", modifier = Modifier.weight(1.5f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            Text("اليوم", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                        }
+                        
+                        // Sample Data Rows
+                        val schedule = listOf(
+                            Triple("الأحد", "2026/6/7م", "القرآن الكريم"),
+                            Triple("الثلاثاء", "2026/6/9م", "التربية الإسلامية"),
+                            Triple("الخميس", "2026/6/11م", "اللغة العربية")
+                        )
+                        
+                        schedule.forEach { (day, date, subject) ->
+                            Row(modifier = Modifier.fillMaxWidth().border(1.dp, Color.Black)) {
+                                Text("ثلاث ساعات", modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                Text("11:30", modifier = Modifier.weight(0.5f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                Text("8:30", modifier = Modifier.weight(0.5f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                Text(subject, modifier = Modifier.weight(1.5f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                                Text(date, modifier = Modifier.weight(1.5f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, color = Color.Black)
+                                Text(day, modifier = Modifier.weight(1f).border(1.dp, Color.Black).padding(12.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center, fontWeight = FontWeight.Bold, color = Color.Black)
+                            }
+                        }
+                    }
+                }
+                
+                Button(onClick = { /* Export */ }, modifier = Modifier.fillMaxWidth().padding(top = 16.dp)) {
+                    Text("طباعة الجدول الزمني")
+                }
             }
         }
     }
