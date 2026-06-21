@@ -1,0 +1,6 @@
+{
+  "name": "يرموك",
+  "description": "تطبيق يرموك الشامل لإدارة المدارس والتعليم الرقمي - المهندس سهيل الهزبري",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
