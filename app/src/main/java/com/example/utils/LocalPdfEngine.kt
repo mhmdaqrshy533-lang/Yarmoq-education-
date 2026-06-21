@@ -73,6 +73,26 @@ class LocalPdfEngine(private val context: Context) {
             canvas.drawText("ختم المدرسة", 150f, 655f, paint)
         }
 
+        // Sovereign Watermark
+        paint.color = Color.argb(40, 200, 200, 200) // Light gray, very transparent
+        paint.textSize = 60f
+        canvas.save()
+        canvas.rotate(-45f, 297.5f, 421f)
+        canvas.drawText("بواسطة محرر اليرموك الشامل @برمجة وتطوير المهندس سهيل الهزبري", 297.5f, 421f, paint)
+        canvas.restore()
+
+        // Margin watermarks
+        paint.textSize = 12f
+        paint.color = Color.GRAY
+        canvas.save()
+        canvas.rotate(-90f, 30f, 421f)
+        canvas.drawText("محرر اليرموك الشامل", 30f, 421f, paint)
+        canvas.restore()
+        canvas.save()
+        canvas.rotate(90f, 565f, 421f)
+        canvas.drawText("المهندس سهيل الهزبري", 565f, 421f, paint)
+        canvas.restore()
+
         document.finishPage(page)
 
         // Save

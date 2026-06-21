@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Assignment
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -54,10 +55,79 @@ fun DashboardScreen(
         
         DashboardItem("إدارة المدارس", Icons.Filled.AccountBalance, Color(0xFFEF5350), "schools"),
         DashboardItem("أدوات المساعد", Icons.Filled.Calculate, Color(0xFF42A5F5), "memos"),
-        DashboardItem("المحاسب المدرسي", Icons.Filled.Paid, Color(0xFF66BB6A), "accountant")
+        DashboardItem("المحاسب المدرسي", Icons.Filled.Paid, Color(0xFF66BB6A), "accountant"),
+        
+        DashboardItem("بصمة المدرسة", Icons.Filled.Analytics, Color(0xFFBA68C8), "school_fingerprint"),
+        DashboardItem("محفظة الطالب", Icons.Filled.FolderShared, Color(0xFFF06292), "student_portfolio"),
+        DashboardItem("تذكير الخطط", Icons.Filled.Alarm, Color(0xFFFF8A65), "plan_reminder")
     )
 
     var selectedTab by remember { mutableIntStateOf(0) }
+
+    var isFocusModeEnabled by remember { mutableStateOf(false) }
+    var showSettings by remember { mutableStateOf(false) }
+
+    if (isFocusModeEnabled) {
+        // Focus Mode Overlay
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            Box(modifier = Modifier.fillMaxSize().background(Color(0xFF0F172A))) {
+                Column(
+                    modifier = Modifier.fillMaxSize().padding(32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(Icons.Filled.VisibilityOff, contentDescription = "Focus", tint = Color.LightGray, modifier = Modifier.size(64.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("وضع التركيز التعليمي نشط", color = Color.White, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("تم كتم كافة الإشعارات الخارجية وتخصيص الواجهة لتحضير الدروس والتدريس فقط.", color = Color.Gray, textAlign = TextAlign.Center)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Button(
+                        onClick = { isFocusModeEnabled = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444))
+                    ) {
+                        Text("إنهاء وضع التركيز", color = Color.White)
+                    }
+                }
+            }
+        }
+        return
+    }
+
+    if (showSettings) {
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+            Scaffold(topBar = { TopAppBar(title = { Text("حول النظام والإعدادات") }, navigationIcon = { IconButton(onClick = { showSettings = false }) { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "رجوع") } }) }) { p ->
+                Column(modifier = Modifier.padding(p).padding(16.dp).fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Icon(Icons.Filled.Code, contentDescription = "Developer", modifier = Modifier.size(80.dp), tint = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("بواسطة محرر اليرموك الشامل", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Text("@برمجة وتطوير المهندس سهيل الهزبري", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.primary)
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Text("تخصيص الواجهة", fontWeight = FontWeight.Bold)
+                            // Simulated Theme Setting
+                            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Text("الوضع الليلي السيادي")
+                                Switch(checked = false, onCheckedChange = {})
+                            }
+                            // Replace Avatar/Logo
+                            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Text("استبدال شعار المدرسة (Smart Logo)")
+                                Button(onClick = {}) { Text("تصفح") }
+                            }
+                            // Dynamic App Icon Launcher
+                            Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                Text("تغيير أيقونة التطبيق (Dynamic Icon)")
+                                Button(onClick = {}) { Text("تغيير الأيقونة") }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return
+    }
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -82,10 +152,13 @@ fun DashboardScreen(
                         }
                     },
                     actions = {
+                        IconButton(onClick = { isFocusModeEnabled = true }) {
+                            Icon(Icons.Filled.SelfImprovement, contentDescription = "Focus Mode", tint = Color.Yellow)
+                        }
                         IconButton(onClick = { /* Notifications */ }) {
                             Icon(Icons.Filled.NotificationsNone, contentDescription = "Notifications", tint = Color.White)
                         }
-                        IconButton(onClick = { /* Settings */ }) {
+                        IconButton(onClick = { showSettings = true }) {
                             Icon(Icons.Filled.Settings, contentDescription = "Settings", tint = Color.White)
                         }
                     },

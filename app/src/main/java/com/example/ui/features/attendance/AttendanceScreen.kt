@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,6 +30,13 @@ fun AttendanceScreen(
     onNavigateBack: () -> Unit
 ) {
     val students by viewModel.students.collectAsState()
+
+    // Calculate Best Class Challenge
+    val totalStudents = java.lang.Math.max(1, students.size)
+    val presentCount = students.count { it.attendanceStatus == "حاضر" }
+    val absenceRatio = 100 - ((presentCount.toFloat() / totalStudents.toFloat()) * 100).toInt()
+    
+    val isBestClass = absenceRatio < 10
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -60,6 +68,19 @@ fun AttendanceScreen(
                     .padding(padding)
                     .padding(horizontal = 16.dp)
             ) {
+                if (isBestClass) {
+                    Card(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFFFD54F))) {
+                        Row(modifier = Modifier.padding(16.dp).fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Filled.Star, contentDescription = "Best Class", tint = Color(0xFFF57F17), modifier = Modifier.size(32.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Column {
+                                Text("تحدي أفضل فصل: محقق!", fontWeight = FontWeight.Bold, color = Color(0xFFF57F17))
+                                Text("هذا الفصل يسجل نسبة غياب أقل من 10%. ممتاز!", color = Color(0xFFF57F17), style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+
                 Text(
                     "المسح السريع للغياب: اضغط على اسم الطالب لتحويله إلى غائب.",
                     style = MaterialTheme.typography.bodyMedium,

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -110,6 +111,23 @@ fun GradingScreen(
                                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                                 color = if (student.score.isNotEmpty()) MaterialTheme.colorScheme.primary else Color.Gray
                             )
+                        }
+                    }
+                }
+
+                if (selectedIndex < students.size) {
+                    val currentStudent = students[selectedIndex]
+                    val scoreVal = currentStudent.score.toIntOrNull() ?: 0
+                    if (scoreVal > 100) {
+                        Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp), colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))) {
+                            Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Filled.Warning, contentDescription = "Error", tint = Color.Red)
+                                Spacer(Modifier.width(8.dp))
+                                Column {
+                                    Text("تنبيه الكنترول ⚠️", fontWeight = FontWeight.Bold, color = Color.Red)
+                                    Text("المجموع ($scoreVal) يتجاوز النهاية العظمى (100). يرجى المراجعة.", color = Color.Red, style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
                         }
                     }
                 }

@@ -80,6 +80,15 @@ fun YarmoukApp() {
         composable("accountant") {
             com.example.ui.features.core.AccountantScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
+        composable("school_fingerprint") {
+            com.example.ui.features.core.SchoolFingerprintScreen(onNavigateBack = { navController.popBackStack() })
+        }
+        composable("student_portfolio") {
+            com.example.ui.features.core.StudentPortfolioScreen(viewModel, onNavigateBack = { navController.popBackStack() })
+        }
+        composable("plan_reminder") {
+            com.example.ui.features.core.PlanReminderScreen(onNavigateBack = { navController.popBackStack() })
+        }
     }
 }
 
