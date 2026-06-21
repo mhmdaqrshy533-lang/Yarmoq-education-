@@ -30,19 +30,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GradingScreen(
+    viewModel: com.example.ui.YarmoukViewModel,
     onNavigateBack: () -> Unit
 ) {
-    val dummyStudents = remember {
-        mutableStateListOf(
-            StudentEntity(1, "أحمد محمد علي", "الصف الأول"),
-            StudentEntity(2, "خالد عبد الله محمود", "الصف الأول"),
-            StudentEntity(3, "يوسف حسن مصطفى", "الصف الأول"),
-            StudentEntity(4, "عمر ابراهيم خليل", "الصف الأول"),
-            StudentEntity(5, "علي عبد الرحمن سعد", "الصف الأول"),
-            StudentEntity(6, "زياد طارق حسين", "الصف الأول"),
-            StudentEntity(7, "حاتم سيف الدين", "الصف الأول")
-        )
-    }
+    val students by viewModel.students.collectAsState()
 
     var selectedIndex by remember { mutableIntStateOf(0) }
     val listState = rememberLazyListState()
@@ -92,7 +83,7 @@ fun GradingScreen(
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    itemsIndexed(dummyStudents) { index, student ->
+                    itemsIndexed(students) { index, student ->
                         val isSelected = index == selectedIndex
                         Row(
                             modifier = Modifier
@@ -126,26 +117,23 @@ fun GradingScreen(
                 // Custom Numeric Keyboard
                 CustomNumericKeyboard(
                     onNumberClick = { num ->
-                        if (selectedIndex < dummyStudents.size) {
-                            val currentScore = dummyStudents[selectedIndex].score
-                            // Prevent overflowing
+                        if (selectedIndex < students.size) {
+                            val currentScore = students[selectedIndex].score
                             if (currentScore.length < 3) {
-                                val s = dummyStudents[selectedIndex]
-                                dummyStudents[selectedIndex] = s.copy(score = currentScore + num)
+                                viewModel.updateStudentScore(students[selectedIndex], currentScore + num)
                             }
                         }
                     },
                     onDeleteClick = {
-                        if (selectedIndex < dummyStudents.size) {
-                            val currentScore = dummyStudents[selectedIndex].score
+                        if (selectedIndex < students.size) {
+                            val currentScore = students[selectedIndex].score
                             if (currentScore.isNotEmpty()) {
-                                val s = dummyStudents[selectedIndex]
-                                dummyStudents[selectedIndex] = s.copy(score = currentScore.dropLast(1))
+                                viewModel.updateStudentScore(students[selectedIndex], currentScore.dropLast(1))
                             }
                         }
                     },
                     onNextClick = {
-                        if (selectedIndex < dummyStudents.size - 1) {
+                        if (selectedIndex < students.size - 1) {
                             selectedIndex++
                             coroutineScope.launch {
                                 listState.animateScrollToItem(selectedIndex)
@@ -153,10 +141,9 @@ fun GradingScreen(
                         }
                     },
                     onSpecialClick = { action ->
-                        if (selectedIndex < dummyStudents.size) {
-                            val s = dummyStudents[selectedIndex]
-                            dummyStudents[selectedIndex] = s.copy(score = action)
-                            if (selectedIndex < dummyStudents.size - 1) {
+                        if (selectedIndex < students.size) {
+                            viewModel.updateStudentScore(students[selectedIndex], action)
+                            if (selectedIndex < students.size - 1) {
                                 selectedIndex++
                                 coroutineScope.launch {
                                     listState.animateScrollToItem(selectedIndex)

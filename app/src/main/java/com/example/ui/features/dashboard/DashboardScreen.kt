@@ -53,7 +53,7 @@ fun DashboardScreen(
         DashboardItem("منشئ الشهائد", Icons.Filled.EmojiEvents, Color(0xFFFFCA28), "certificates"),
         
         DashboardItem("إدارة المدارس", Icons.Filled.AccountBalance, Color(0xFFEF5350), "schools"),
-        DashboardItem("أدوات المساعد", Icons.Filled.Calculate, Color(0xFF42A5F5), "tools"),
+        DashboardItem("أدوات المساعد", Icons.Filled.Calculate, Color(0xFF42A5F5), "memos"),
         DashboardItem("المحاسب المدرسي", Icons.Filled.Paid, Color(0xFF66BB6A), "accountant")
     )
 

@@ -25,18 +25,10 @@ import com.example.data.local.entity.StudentEntity
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AttendanceScreen(
+    viewModel: com.example.ui.YarmoukViewModel,
     onNavigateBack: () -> Unit
 ) {
-    // Dummy Data for demonstration
-    val dummyStudents = remember {
-        mutableStateListOf(
-            StudentEntity(1, "أحمد محمد علي", "الصف الأول"),
-            StudentEntity(2, "خالد عبد الله محمود", "الصف الأول"),
-            StudentEntity(3, "يوسف حسن مصطفى", "الصف الأول"),
-            StudentEntity(4, "عمر ابراهيم خليل", "الصف الأول"),
-            StudentEntity(5, "علي عبد الرحمن سعد", "الصف الأول")
-        )
-    }
+    val students by viewModel.students.collectAsState()
 
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         Scaffold(
@@ -55,7 +47,7 @@ fun AttendanceScreen(
             },
             floatingActionButton = {
                 FloatingActionButton(
-                    onClick = { /* Save to DB */ onNavigateBack() },
+                    onClick = { onNavigateBack() },
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Text("حفظ", modifier = Modifier.padding(horizontal = 16.dp), fontWeight = FontWeight.Bold)
@@ -78,7 +70,7 @@ fun AttendanceScreen(
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(dummyStudents) { student ->
+                    items(students) { student ->
                         val isPresent = student.attendanceStatus == "حاضر"
                         val backgroundColor = if (isPresent) Color(0xFFE8F5E9) else Color(0xFFFFEBEE)
                         val contentColor = if (isPresent) Color(0xFF2E7D32) else Color(0xFFC62828)
@@ -90,10 +82,7 @@ fun AttendanceScreen(
                                 .clip(RoundedCornerShape(12.dp))
                                 .background(backgroundColor)
                                 .clickable {
-                                    val index = dummyStudents.indexOf(student)
-                                    dummyStudents[index] = student.copy(
-                                        attendanceStatus = if (isPresent) "غائب" else "حاضر"
-                                    )
+                                    viewModel.updateStudentAttendance(student, !isPresent)
                                 }
                                 .padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically,

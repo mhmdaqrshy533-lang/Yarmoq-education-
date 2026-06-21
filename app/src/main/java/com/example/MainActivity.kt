@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun YarmoukApp() {
     val navController = rememberNavController()
+    val viewModel: com.example.ui.YarmoukViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 
     NavHost(navController = navController, startDestination = "dashboard") {
         composable("dashboard") {
@@ -44,40 +45,40 @@ fun YarmoukApp() {
             )
         }
         composable("grading") {
-            GradingScreen(onNavigateBack = { navController.popBackStack() })
+            GradingScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("attendance") {
-            AttendanceScreen(onNavigateBack = { navController.popBackStack() })
+            AttendanceScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("exams") {
-            PlaceholderScreen(title = "محرر الامتحانات الذكي", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.ExamsScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("bubblesheet") {
-            PlaceholderScreen(title = "محرر الأتمتة", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.BubbleSheetScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("semester_plan") {
-            PlaceholderScreen(title = "الخطة الفصلية", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.PlansScreen(viewModel, isDaily = false, onNavigateBack = { navController.popBackStack() })
         }
         composable("daily_plan") {
-            PlaceholderScreen(title = "الخطة اليومية", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.PlansScreen(viewModel, isDaily = true, onNavigateBack = { navController.popBackStack() })
         }
         composable("results") {
-            PlaceholderScreen(title = "النتائج والمحصلات", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.ResultsScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("cards") {
-            PlaceholderScreen(title = "بطاقات طلابية", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.StudentCardsScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("certificates") {
-            PlaceholderScreen(title = "منشئ الشهائد", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.certificates.CertificateBuilderScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("schools") {
-            PlaceholderScreen(title = "إدارة المدارس", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.SchoolsScreen(onNavigateBack = { navController.popBackStack() })
         }
-        composable("tools") {
-            PlaceholderScreen(title = "أدوات المساعد", onNavigateBack = { navController.popBackStack() })
+        composable("memos") {
+            com.example.ui.features.core.MemosScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
         composable("accountant") {
-            PlaceholderScreen(title = "المحاسب المدرسي", onNavigateBack = { navController.popBackStack() })
+            com.example.ui.features.core.AccountantScreen(viewModel, onNavigateBack = { navController.popBackStack() })
         }
     }
 }
