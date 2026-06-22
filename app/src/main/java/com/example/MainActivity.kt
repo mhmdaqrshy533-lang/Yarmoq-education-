@@ -151,15 +151,21 @@ fun GlassDashboardScreen(navController: androidx.navigation.NavController) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 val menuItems = listOf(
-                    MenuAction("المحصلات الشهرية", Icons.Default.EventNote, Color(0xFF8B5CF6), "students"),
-                    MenuAction("سجل الطلاب", Icons.Default.RecentActors, Color(0xFF3B82F6), "students_list"),
-                    MenuAction("كشوف الحضور", Icons.Default.CoPresent, Color(0xFFF59E0B), ""),
-                    MenuAction("بطاقات التقدم", Icons.Default.Badge, Color(0xFF10B981), "progress_card"),
-                    MenuAction("النتائج النهائية", Icons.Default.WorkspacePremium, Color(0xFFEC4899), ""),
-                    MenuAction("الشهائد", Icons.Default.CardMembership, Color(0xFF0EA5E9), ""),
-                    MenuAction("محرر النشرات", Icons.Default.Description, Color(0xFFF43F5E), ""),
-                    MenuAction("البطاقات المدرسية", Icons.Default.AssignmentInd, Color(0xFF8B5CF6), ""),
-                    MenuAction("الإعدادات", Icons.Default.Settings, Color(0xFF64748B), "")
+                    MenuAction("المحصلات الشهرية", Icons.Default.DateRange, Color(0xFF1E3A8A), "students"),
+                    MenuAction("محرر أتمتة", Icons.Default.SmartToy, Color(0xFF3B82F6), ""),
+                    MenuAction("محرر إمتحانات", Icons.Default.Quiz, Color(0xFFF59E0B), ""),
+                    MenuAction("الخطة اليومية", Icons.Default.Today, Color(0xFF10B981), ""),
+                    MenuAction("الخطة الفصلية", Icons.Default.CalendarMonth, Color(0xFF4C1D95), ""),
+                    MenuAction("غياب الطلاب", Icons.Default.NoAccounts, Color(0xFFEC4899), ""),
+                    MenuAction("بطاقات التقدم", Icons.Default.AssignmentInd, Color(0xFF0EA5E9), "progress_card"),
+                    MenuAction("بطائق طلابية", Icons.Default.Badge, Color(0xFF7E22CE), "students_list"),
+                    MenuAction("النتائج النهائية", Icons.Default.WorkspacePremium, Color(0xFFBE123C), ""),
+                    MenuAction("مذكرات رسمية", Icons.Default.Description, Color(0xFF64748B), ""),
+                    MenuAction("محرر الكتب", Icons.Default.MenuBook, Color(0xFFF43F5E), ""),
+                    MenuAction("الشهائد", Icons.Default.CardMembership, Color(0xFF0D9488), ""),
+                    MenuAction("إضافي", Icons.Default.AddCircle, Color(0xFFb45309), ""),
+                    MenuAction("مدارس اخرى", Icons.Default.Domain, Color(0xFF1D4ED8), ""),
+                    MenuAction("المحاسب المدرسي", Icons.Default.Calculate, Color(0xFF047857), "")
                 )
                 
                 items(menuItems.size) { index ->
