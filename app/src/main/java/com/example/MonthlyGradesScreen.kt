@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -40,7 +40,7 @@ fun MonthlyGradesScreen(navController: NavController, viewModel: MainViewModel =
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", modifier = Modifier.clickable { navController.popBackStack() }, tint = Color(0xFF1E3A8A))
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", modifier = Modifier.clickable { navController.popBackStack() }, tint = Color(0xFF1E3A8A))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("محصلات الصف : السادس", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
                 Text("المادة : اللغة العربية", fontSize = 14.sp, color = Color.Gray)
@@ -97,8 +97,8 @@ fun MonthlyGradesScreen(navController: NavController, viewModel: MainViewModel =
         ) {
             BottomNavItem("لغة الأرقام", Icons.Default.Settings)
             BottomNavItem("الطباعة", Icons.Default.Print)
-            BottomNavItem("إدخال الدرجات", Icons.Default.ArrowBack)
-            BottomNavItem("الطلاب", Icons.Default.ArrowBack, isSelected = true)
+            BottomNavItem("إدخال الدرجات", Icons.AutoMirrored.Filled.ArrowBack)
+            BottomNavItem("الطلاب", Icons.AutoMirrored.Filled.ArrowBack, isSelected = true)
         }
     }
 }

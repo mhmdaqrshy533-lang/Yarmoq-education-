@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,8 +25,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.NavHost
@@ -49,6 +52,7 @@ class MainActivity : ComponentActivity() {
                         composable("dashboard") { GlassDashboardScreen(navController) }
                         composable("students") { MonthlyGradesScreen(navController) }
                         composable("students_list") { StudentsListScreen(navController) }
+                        composable("progress_card") { ProgressCardScreen(navController) }
                         // Other screens would be added here
                     }
                 }
@@ -95,22 +99,25 @@ fun GlassDashboardScreen(navController: androidx.navigation.NavController) {
         Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Header
+            // Header (Neumorphism / Glassmorphism)
             Row(
-                modifier = Modifier.fillMaxWidth().glassMorphism(intensity = 0.5f).padding(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .glassMorphism(intensity = 0.6f)
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text("حقيبة المعلم العربي", fontSize = 14.sp, color = Color.White.copy(alpha=0.7f))
-                    Text("المحرر المدرسي الشامل", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    Text("للإصدار 40.1 Pro", fontSize = 12.sp, color = Color.White.copy(alpha=0.5f))
+                    Text("مدرسة اليرموك النموذجية", fontSize = 14.sp, color = Color.White.copy(alpha=0.7f))
+                    Text("المحرر المدرسي الشامل", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("إصدار 40.1 Pro - يرموك", fontSize = 12.sp, color = Color(0xFFC084FC))
                 }
                 Box(
-                    modifier = Modifier.size(48.dp).glassMorphism(cornerRadius = 100.dp, intensity = 1.5f),
+                    modifier = Modifier.size(52.dp).glassMorphism(cornerRadius = 100.dp, intensity = 1.5f),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Person, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                    Icon(Icons.Default.School, contentDescription = null, tint = Color.White, modifier = Modifier.size(28.dp))
                 }
             }
 
@@ -118,61 +125,71 @@ fun GlassDashboardScreen(navController: androidx.navigation.NavController) {
 
             // Quick actions
             Row(
-                modifier = Modifier.fillMaxWidth().glassMorphism(intensity = 0.5f).padding(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .glassMorphism(intensity = 0.4f)
+                    .padding(12.dp),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Icon(Icons.Default.PlayArrow, contentDescription = null, tint = Color.Red)
-                Icon(Icons.Default.Send, contentDescription = null, tint = Color.Blue)
-                Icon(Icons.Default.Phone, contentDescription = null, tint = Color.Green)
-                Icon(Icons.Default.Help, contentDescription = null, tint = Color.White)
-                Icon(Icons.Default.Settings, contentDescription = null, tint = Color.White)
-                Icon(Icons.Default.Lock, contentDescription = null, tint = Color.White)
+                IconButton(onClick = {}) { Icon(Icons.Default.PlayArrow, null, tint = Color(0xFFF43F5E)) }
+                IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.Send, null, tint = Color(0xFF3B82F6)) }
+                IconButton(onClick = {}) { Icon(Icons.Default.Phone, null, tint = Color(0xFF10B981)) }
+                IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.Help, null, tint = Color.White) }
+                IconButton(onClick = {}) { Icon(Icons.Default.Settings, null, tint = Color.White) }
+                IconButton(onClick = {}) { Icon(Icons.Default.Lock, null, tint = Color.White) }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            Text("الأقسام الرئيسية", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(start = 8.dp))
+            Text("الأقسام الرئيسية", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.height(16.dp))
 
             // Modules Grid
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 val menuItems = listOf(
                     MenuAction("المحصلات الشهرية", Icons.Default.EventNote, Color(0xFF8B5CF6), "students"),
-                    MenuAction("محرر أتمتة", Icons.Default.FactCheck, Color(0xFF3B82F6), ""),
-                    MenuAction("محرر إمتحانات", Icons.Default.Description, Color(0xFFF59E0B), ""),
-                    MenuAction("حضور وغياب", Icons.Default.CoPresent, Color(0xFF10B981), ""),
-                    MenuAction("النتائج الشهرية", Icons.Default.Assessment, Color(0xFFEC4899), ""),
-                    MenuAction("النتائج النهائية", Icons.Default.WorkspacePremium, Color(0xFF64748B), ""),
-                    MenuAction("بطاقات التقدم", Icons.Default.Badge, Color(0xFF0EA5E9), ""),
-                    MenuAction("سجل الطلاب", Icons.Default.RecentActors, Color(0xFFF43F5E), "students_list"),
-                    MenuAction("الشهادات", Icons.Default.CardMembership, Color(0xFF8B5CF6), "")
+                    MenuAction("سجل الطلاب", Icons.Default.RecentActors, Color(0xFF3B82F6), "students_list"),
+                    MenuAction("كشوف الحضور", Icons.Default.CoPresent, Color(0xFFF59E0B), ""),
+                    MenuAction("بطاقات التقدم", Icons.Default.Badge, Color(0xFF10B981), "progress_card"),
+                    MenuAction("النتائج النهائية", Icons.Default.WorkspacePremium, Color(0xFFEC4899), ""),
+                    MenuAction("الشهائد", Icons.Default.CardMembership, Color(0xFF0EA5E9), ""),
+                    MenuAction("محرر النشرات", Icons.Default.Description, Color(0xFFF43F5E), ""),
+                    MenuAction("البطاقات المدرسية", Icons.Default.AssignmentInd, Color(0xFF8B5CF6), ""),
+                    MenuAction("الإعدادات", Icons.Default.Settings, Color(0xFF64748B), "")
                 )
                 
                 items(menuItems.size) { index ->
                     val action = menuItems[index]
+                    var isPressed by remember { mutableStateOf(false) }
+                    val scale by animateFloatAsState(if (isPressed) 0.95f else 1f)
+                    
                     Box(
                         modifier = Modifier
                             .aspectRatio(0.85f)
-                            .glassMorphism(cornerRadius = 16.dp, intensity = 0.8f)
-                            .clickable { if(action.route.isNotEmpty()) navController.navigate(action.route) }
+                            .graphicsLayer(scaleX = scale, scaleY = scale)
+                            .glassMorphism(cornerRadius = 20.dp, intensity = 0.9f)
+                            .clickable { 
+                                isPressed = !isPressed 
+                                if(action.route.isNotEmpty()) navController.navigate(action.route) 
+                            }
                             .padding(8.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                             Box(
                                 modifier = Modifier
-                                    .size(48.dp)
-                                    .background(Brush.linearGradient(listOf(action.color, action.color.copy(alpha = 0.6f))), CircleShape),
+                                    .size(56.dp)
+                                    .background(Brush.radialGradient(listOf(action.color, action.color.copy(alpha = 0.5f))), CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Icon(action.icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                                Icon(action.icon, contentDescription = null, tint = Color.White, modifier = Modifier.size(28.dp))
                             }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(action.title, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Medium, maxLines = 2)
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(action.title, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 2, textAlign = TextAlign.Center)
                         }
                     }
                 }

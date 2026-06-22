@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +34,7 @@ fun StudentsListScreen(navController: NavController, viewModel: MainViewModel = 
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.ArrowBack, contentDescription = "Back", modifier = Modifier.clickable { navController.popBackStack() }, tint = Color.Gray)
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", modifier = Modifier.clickable { navController.popBackStack() }, tint = Color.Gray)
             Spacer(modifier = Modifier.width(16.dp))
             Text("عرض سجلات الطلاب", fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
         }
@@ -57,7 +57,7 @@ fun StudentsListScreen(navController: NavController, viewModel: MainViewModel = 
                 onValueChange = {},
                 placeholder = { Text("بحث بالاسم أو رقم الجلوس", textAlign = TextAlign.Right) },
                 modifier = Modifier.weight(1f),
-                colors = TextFieldDefaults.outlinedTextFieldColors(unfocusedBorderColor = Color.LightGray)
+                colors = OutlinedTextFieldDefaults.colors(unfocusedBorderColor = Color.LightGray)
             )
         }
         
@@ -97,7 +97,7 @@ fun StudentCard(student: Student, index: Int) {
                     Text("${student.governorate} • ${student.district} • ${student.birthDate}", color = Color.Gray, fontSize = 12.sp)
                 }
             }
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFEE2E2)), contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp), shape = RoundedCornerShape(4.dp)) { Text("حذف", color = Color.Red, fontSize = 12.sp) }

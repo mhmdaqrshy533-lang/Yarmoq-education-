@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -38,7 +38,7 @@ fun StudentManagementScreen(navController: NavController, viewModel: MainViewMod
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text("المحصلات الشهرية", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
@@ -54,7 +54,7 @@ fun StudentManagementScreen(navController: NavController, viewModel: MainViewMod
             placeholder = { Text("بحث بالاسم أو رقم الجلوس", color = Color.White.copy(alpha=0.5f)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null, tint = Color.White) },
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).glassMorphism(intensity = 0.3f),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
                 cursorColor = Color.White
